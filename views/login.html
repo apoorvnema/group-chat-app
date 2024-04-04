@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Chat App</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Messages</a></li>
+                <li><a class="active" href="/login">Login</a></li>
+                <li><a href="/contactus">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <form action='/' method='GET'>
+            <input type='text' name='username' placeholder='write your username here'>
+            <button type='submit'>Login</button>
+        </form>
+    </section>
+
+</body>
+<script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (e) => {
+        const user = e.target.username.value;
+        localStorage.setItem('username', user);
+    })
+</script>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Chat App</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a class="active" href="/">Messages</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/contactus">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <form action='/' method='POST'>
+            <pre>Message Will Appear Here...</pre>
+            <input type='text' name='msg' placeholder='write your message here'>
+            <button type='submit'>Send</button>
+        </form>
+    </section>
+
+</body>
+<script>
+    let user = localStorage.getItem('username');
+    if (user == null) user = "Anonymous";
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const msg = e.target.msg.value;
+        const newmsg = user + ':' + msg + ' ';
+        fetch('/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: newmsg })
+        }).then(() => window.location.reload()).catch((e) => {
+            console.log(e);
+        })
+    })
+</script>
+
+</html>

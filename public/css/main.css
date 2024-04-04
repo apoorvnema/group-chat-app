@@ -1,0 +1,75 @@
+/* Nav Bar */
+body,
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    padding: 10px 20px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 15px;
+}
+
+nav ul li a.active {
+    background-color: #555;
+}
+
+nav ul li a:hover {
+    background-color: #555;
+}
+
+/* Form */
+section {
+    display: flex;
+    justify-content: center;
+}
+
+section h1 {
+    font-family: cursive;
+}
+
+form {
+    max-width: 400px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+input[type='text'],
+input[type='email'] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button[type='submit'] {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button[type='submit']:hover {
+    background-color: #555;
+}
