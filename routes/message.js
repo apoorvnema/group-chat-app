@@ -19,8 +19,8 @@ router.get('/', (req, res) => {
             <button type='submit'>Send</button>
         </form>
         <script>
-            const user = localStorage.getItem('username');
-            if(!user) user = "Anonymous";
+            let user = localStorage.getItem('username');
+            if(user == null) user = "Anonymous";
             const form = document.querySelector('form');
             form.addEventListener('submit',(e)=>{
                 e.preventDefault();
