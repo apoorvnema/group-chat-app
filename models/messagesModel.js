@@ -1,40 +1,38 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
+
+const rootDir = require("../utils/path");
 
 module.exports = class Message {
     constructor(message) {
         this.message = message;
     }
-
     save() {
-        const p = path.join(
-            path.dirname(require.main.filename),
-            'data',
-            'messages.json'
-        );
-        fs.readFile(p, (err, fileContent) => {
+        fs.readFile(path.join(rootDir, "/data", "messages.json"), (err, data) => {
             let messages = [];
             if (!err) {
-                messages = JSON.parse(fileContent);
+                messages = JSON.parse(data);
             }
-            messages.push(this);
-            fs.writeFile(p, JSON.stringify(messages), err => {
-                console.log(err);
+            messages.push(this.message);
+            fs.writeFile(path.join(rootDir, "/data", "messages.json"), JSON.stringify(messages), (err) => {
+                if (err) {
+                    console.error("Error appending data to file:", err);
+                } else {
+                    console.log("Data appended successfully.");
+                }
             });
+        })
+    }
+    static fetchAll(callback) {
+        fs.readFile(path.join(rootDir, "/data", "messages.json"), (err, data) => {
+            if (err) {
+                console.error("Error reading file:", err);
+                callback(err);
+            } else {
+                const messages = JSON.parse(data);
+                callback(messages);
+            }
         });
     }
 
-    static fetchAll(cb) {
-        const p = path.join(
-            path.dirname(require.main.filename),
-            'data',
-            'messages.json'
-        );
-        fs.readFile(p, (err, fileContent) => {
-            if (err) {
-                cb([]);
-            }
-            cb(JSON.parse(fileContent));
-        });
-    }
-};
+}

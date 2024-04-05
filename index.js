@@ -1,24 +1,23 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const path = require('path');
 
-const loginRoutes = require("./routes/login");
-const messageRoutes = require("./routes/message");
-const contactRoutes = require("./routes/contact");
+const messages = require("./routes/messages");
+const login = require("./routes/login");
+const contact = require("./routes/contact");
 const errorController = require("./controllers/errorController");
-const rootDir = require('./util/path');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(rootDir, 'public')));
+app.use(express.static("public"));
+app.use(express.json());
 
-app.use(loginRoutes);
-app.use(messageRoutes);
-app.use(contactRoutes);
+app.use(messages);
+app.use(login);
+app.use(contact);
 
 app.use(errorController.error404);
 
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
-})
+    console.log(`Server is running on port ${PORT}`);
+});

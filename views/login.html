@@ -14,25 +14,19 @@
             <ul>
                 <li><a href="/">Messages</a></li>
                 <li><a class="active" href="/login">Login</a></li>
-                <li><a href="/contactus">Contact Us</a></li>
+                <li><a href="/contactus">Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <section>
-        <form action='/' method='GET'>
-            <input type='text' name='username' placeholder='write your username here'>
-            <button type='submit'>Login</button>
+        <form action="/" method="GET">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username">
+            <button type="submit">Submit</button>
         </form>
     </section>
-
 </body>
-<script>
-    const form = document.querySelector('form');
-    form.addEventListener('submit', (e) => {
-        const user = e.target.username.value;
-        localStorage.setItem('username', user);
-    })
-</script>
+<script src="/js/login.js"></script>
 
 </html>

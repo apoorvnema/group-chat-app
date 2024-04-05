@@ -14,19 +14,20 @@
             <ul>
                 <li><a href="/">Messages</a></li>
                 <li><a href="/login">Login</a></li>
-                <li><a class="active" href="/contactus">Contact Us</a></li>
+                <li><a class="active" href="/contactus">Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <section>
-        <form action='/success' method='POST'>
-            <input type='text' name='name' placeholder='write your name here'>
-            <input type='email' name='email' placeholder='write your email here'>
-            <button type='submit'>Send</button>
+        <form action="/contactus" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email">
+            <button type="submit">Submit</button>
         </form>
     </section>
-
 </body>
 
 </html>

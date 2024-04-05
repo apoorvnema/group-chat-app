@@ -12,16 +12,21 @@
     <header>
         <nav>
             <ul>
-                <li><a href="/">Messages</a></li>
+                <li><a class="active" href="/">Messages</a></li>
                 <li><a href="/login">Login</a></li>
                 <li><a href="/contactus">Contact</a></li>
             </ul>
         </nav>
     </header>
-
     <section>
-        <h1>Page Not Found!</h1>
+        <form action="/" method="POST">
+            <pre></pre>
+            <label for="message">Message:</label>
+            <input type="text" name="message" id="message">
+            <button type="submit">Submit</button>
+        </form>
     </section>
 </body>
+<script src="/js/messages.js"></script>
 
 </html>
