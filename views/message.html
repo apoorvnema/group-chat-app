@@ -46,6 +46,28 @@
             console.log(e);
         })
     })
+    document.addEventListener('DOMContentLoaded', () => {
+        const pre = document.querySelector("pre");
+        fetch('/messages', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to fetch messages');
+            }
+        }).then(messages => {
+            if (messages != null) pre.innerText = "";
+            messages.forEach((message) => {
+                pre.innerText += message['message'] + '\n';
+            })
+        }).catch(error => {
+            console.error('Error fetching messages:', error);
+        });
+    });
 </script>
 
 </html>

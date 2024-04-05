@@ -7,6 +7,8 @@ router.use(express.json());
 
 router.get('/', messageController.getMessages);
 
+router.get('/messages', messageController.allMessages);
+
 router.post('/', messageController.postMessages);
 
 module.exports = router;
