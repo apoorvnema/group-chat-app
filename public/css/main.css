@@ -65,6 +65,7 @@ pre {
     margin: 10px;
     padding: 10px;
     border-radius: 10px;
+    overflow: auto;
 }
 
 label {
@@ -100,5 +101,9 @@ label a {
 }
 
 label a:hover {
+    color: #0da37f;
+}
+
+#online-users {
     color: #0da37f;
 }

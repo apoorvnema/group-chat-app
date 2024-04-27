@@ -85,3 +85,31 @@ exports.getOnlineUsers = async (req, res, next) => {
         res.status(500).json({ error: err.errors[0].message });
     }
 }
+
+exports.setOfflineUser = async (req, res, next) => {
+    const t = await database.transaction();
+    try {
+        req.user.loggedIn = false;
+        await req.user.save();
+        await t.commit();
+        res.status(200).json({ message: "User is offline" });
+    } catch (err) {
+        await t.rollback();
+        console.error(err.errors[0].message);
+        res.status(500).json({ error: err.errors[0].message });
+    }
+}
+
+exports.setOnlineUser = async (req, res, next) => {
+    const t = await database.transaction();
+    try {
+        req.user.loggedIn = true;
+        await req.user.save();
+        await t.commit();
+        res.status(200).json({ message: "User is online" });
+    } catch (err) {
+        await t.rollback();
+        console.error(err.errors[0].message);
+        res.status(500).json({ error: err.errors[0].message });
+    }
+}
