@@ -1,11 +1,11 @@
 /* Nav Bar */
 body {
+    height: 100vh;
     display: flex;
     flex-direction: column;
     margin: 0px;
     font-family: cursive;
     color: white;
-    overflow-y: hidden;
 }
 
 header {
@@ -52,6 +52,12 @@ form {
     padding: 20px;
     width: 30%;
     border-radius: 20px;
+}
+
+@media screen and (max-width: 600px) {
+    form {
+        width: 100%;
+    }
 }
 
 pre {

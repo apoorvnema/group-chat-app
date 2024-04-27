@@ -4,7 +4,7 @@ const rootDir = require("../utils/path");
 const Message = require("../models/messagesModel");
 
 exports.getMessages = (req, res, next) => {
-    res.sendFile(path.join(rootDir, "views", "messages.html"));
+    res.sendFile(path.join(rootDir, "public", "messages.html"));
 }
 
 exports.postMessages = (req, res, next) => {
