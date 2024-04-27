@@ -10,7 +10,7 @@ form.addEventListener("submit", async (e) => {
         window.location.href = "/";
     }
     catch (err) {
-        console.log(err)
+        console.error(err)
         alert(err.response.data.error);
     }
 });

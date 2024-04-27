@@ -17,10 +17,6 @@ const Messages = database.define("messages", {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    receiver: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
 });
 
 module.exports = Messages;

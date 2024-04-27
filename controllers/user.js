@@ -17,12 +17,12 @@ exports.postSignup = async (req, res, next) => {
         const modifiedPassword = await bcrypt.hash(password, 10);
         await User.create({ name: name, email: email, phone: phone, password: modifiedPassword });
         await t.commit();
-        res.status(200).send({ message: 'User created successfully' });
+        res.status(200).json({ message: 'User created successfully' });
     }
     catch (err) {
-        console.log(err.errors[0].message);
+        console.error(err.errors[0].message);
         await t.rollback();
-        res.status(500).send({ error: err.errors[0].message });
+        res.status(500).json({ error: err.errors[0].message });
     }
 };
 
@@ -35,6 +35,7 @@ function generateAccessToken(id, email) {
 }
 
 exports.postLogin = async (req, res, next) => {
+    const t = await database.transaction();
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ where: { email: email } });
@@ -49,15 +50,38 @@ exports.postLogin = async (req, res, next) => {
             error.statusCode = 401;
             throw error;
         }
-        res.status(200).send({ message: 'User successfully Logged In', token: generateAccessToken(user.id, user.email) });
+        user.loggedIn = true;
+        await user.save();
+        await t.commit();
+        res.status(200).json({ message: 'User successfully Logged In', token: generateAccessToken(user.id, user.email) });
     }
     catch (err) {
+        await t.rollback();
         if (err.statusCode != 500) {
-            res.status(err.statusCode).send({ error: err.message });
+            res.status(err.statusCode).json({ error: err.message });
         }
         else {
-            console.log(err);
-            res.status(500).send({ error: "Internal Server Error" });
+            console.error(err);
+            res.status(500).json({ error: "Internal Server Error" });
         }
     }
 };
+
+exports.getOnlineUsers = async (req, res, next) => {
+    try {
+        const users = await User.findAll({ where: { loggedIn: true } });
+        const names = users.map(user => {
+            if (req.user.name == user.name) {
+                return `You`;
+            }
+            else {
+                return user.name;
+            }
+        });
+        res.status(200).json({ message: names });
+    }
+    catch (err) {
+        console.error(err.errors[0].message);
+        res.status(500).json({ error: err.errors[0].message });
+    }
+}
