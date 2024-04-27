@@ -14,7 +14,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(express.json());
 dotenv.config();
-app.use(cors());
+app.use(cors({
+    origin: ["http://127.0.0.1:3000", "http://localhost:3000"]
+}));
 
 app.use(messages);
 app.use(user);
