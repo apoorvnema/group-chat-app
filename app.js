@@ -6,8 +6,10 @@ const cors = require("cors");
 const messages = require("./routes/messages");
 const user = require("./routes/user");
 const contact = require("./routes/contact");
-const errorController = require("./controllers/error");
+const error = require("./controllers/error");
 const database = require("./utils/database");
+const User = require("./models/user");
+const Messages = require("./models/messages");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,7 +24,10 @@ app.use(messages);
 app.use(user);
 app.use(contact);
 
-app.use(errorController.error404);
+app.use(error.error404);
+
+User.hasMany(Messages);
+Messages.belongsTo(User);
 
 database
     .sync()

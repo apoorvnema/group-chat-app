@@ -92,3 +92,13 @@ button {
 button:hover {
     background-color: #0da380b4;
 }
+
+/* Signup */
+label a {
+    text-decoration: none;
+    color: #14ba94;
+}
+
+label a:hover {
+    color: #0da37f;
+}
