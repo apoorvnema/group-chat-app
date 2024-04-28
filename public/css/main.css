@@ -102,6 +102,16 @@ button:hover {
     color: #0da37f;
 }
 
+#members {
+    margin: 0px;
+    padding-left: 20px;
+}
+
+#members li:hover {
+    color: #d9534f;
+    cursor: pointer;
+}
+
 /* Signup and Login */
 label a {
     text-decoration: none;
@@ -121,13 +131,15 @@ label a:hover {
     width: 100%;
 }
 
-/* Create Group */
-#create-group-btn {
+/* Create/Edit Group */
+#create-group-btn,
+#edit-group-settings {
     font-size: medium;
     margin-left: auto;
 }
 
-#createGroupDialog {
+#createGroupDialog,
+#editGroupDialog {
     position: fixed;
     top: 0;
     left: 0;
@@ -142,10 +154,23 @@ label a:hover {
     text-align: -webkit-center;
 }
 
-#createGroupDialog.active {
+#createGroupDialog.active,
+#editGroupDialog.active {
     display: block;
 }
 
 #close {
+    background-color: #f0ad4e;
+}
+
+#delete-group {
     background-color: #d9534f;
+}
+
+#close:hover {
+    background-color: #f0ad4e77;
+}
+
+#delete-group:hover {
+    background-color: #d9534f77;
 }

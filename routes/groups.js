@@ -19,4 +19,10 @@ router.post("/send-group-message/:groupId", authenticate, groupController.sendGr
 
 router.post("/create-group", authenticate, groupController.createGroup);
 
+router.delete("/delete-group/:groupId", authenticate, groupController.deleteGroup);
+
+router.put("/edit-group/:groupId", authenticate, groupController.editGroup);
+
+router.delete("/delete-member/:groupId/:userId", authenticate, groupController.deleteMember);
+
 module.exports = router;

@@ -48,7 +48,7 @@ async function singleGroup(id, name) {
 document.getElementById("createGroupForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const groupName = document.getElementById("groupName").value;
-    const members = document.getElementById("members").value;
+    const members = document.getElementById("membersInput").value;
     let membersArray = members.split(",");
     try {
         if (!token) {

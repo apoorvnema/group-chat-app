@@ -62,16 +62,22 @@ exports.getGroupMembers = async (req, res, next) => {
             return res.status(401).json({ error: 'Unauthorized' });
         }
         const group = await Group.findByPk(groupId);
+        const admin = groupMember.admin;
         const memberList = await group.getUsers();
-        const names = memberList.map(user => {
-            if (req.user.name == user.name) {
-                return `You`;
+        const idAndNames = memberList.reduce((acc, user) => {
+            if (req.user.name != user.name) {
+                acc[user.id] = user.name;
             }
             else {
-                return user.name;
+                acc[user.id] = `You`;
             }
+            return acc;
+        }, {});
+        const emails = memberList.map(user => {
+            if (user.email != req.user.email)
+                return user.email;
         });
-        res.status(200).json({ message: names });
+        res.status(200).json({ message: idAndNames, admin: admin, emails: emails });
     }
     catch (err) {
         console.error(err);
@@ -109,9 +115,8 @@ exports.createGroup = async (req, res, next) => {
     try {
         const group = await Group.create({
             name: req.body.name,
-            adminId: req.user.id
         }, { transaction: t });
-        await group.addUser(req.user, { transaction: t });
+        await group.addUser(req.user, { through: { admin: true }, transaction: t });
         for (const member of req.body.members) {
             const user = await User.findOne({ where: { email: member } });
             if (!user) {
@@ -125,6 +130,74 @@ exports.createGroup = async (req, res, next) => {
     } catch (err) {
         console.error(err.errors[0].message);
         await t.rollback();
+        res.status(500).json({ error: err.errors[0].message });
+    }
+}
+
+exports.deleteGroup = async (req, res, next) => {
+    const t = await database.transaction();
+    try {
+        const groupId = req.params.groupId;
+        const group = await Group.findByPk(groupId);
+        const adminUser = await group.getUsers({
+            where: { id: req.user.id },
+            through: { where: { admin: true } }
+        });
+        if (adminUser.length == 0 || adminUser[0].id != req.user.id) {
+            return res.status(401).json({ error: 'You are not admin' });
+        }
+        await group.destroy({ transaction: t });
+        await t.commit();
+        res.status(200).json({ message: 'Group deleted successfully' });
+    } catch (err) {
+        await t.rollback();
+        console.error(err.errors[0].message);
+        res.status(500).json({ error: err.errors[0].message });
+    }
+}
+
+exports.editGroup = async (req, res, next) => {
+    const t = await database.transaction();
+    try {
+        const groupId = req.params.groupId;
+        const group = await Group.findByPk(groupId);
+        const adminUser = await group.getUsers({
+            where: { id: req.user.id },
+            through: { where: { admin: true } }
+        });
+        if (adminUser.length == 0 || adminUser[0].id != req.user.id) {
+            return res.status(401).json({ error: 'You are not admin' });
+        }
+        group.name = req.body.name;
+        await group.save({ transaction: t });
+        await t.commit();
+        res.status(200).json({ message: 'Group edited successfully' });
+    } catch (err) {
+        await t.rollback();
+        console.error(err.errors[0].message);
+        res.status(500).json({ error: err.errors[0].message });
+    }
+}
+
+exports.deleteMember = async (req, res, next) => {
+    try {
+        const groupId = req.params.groupId;
+        const userId = req.params.userId;
+        const group = await Group.findByPk(groupId);
+        const adminUser = await group.getUsers({
+            where: { id: req.user.id },
+            through: { where: { admin: true } }
+        });
+        if (adminUser.length == 0 || adminUser[0].id != req.user.id) {
+            return res.status(401).json({ error: 'You are not admin' });
+        }
+        if (userId == req.user.id) {
+            return res.status(500).json({ error: `You can't leave group as you are creator` });
+        }
+        await GroupMember.destroy({ where: { groupId: groupId, userId: userId } });
+        res.status(200).json({ message: 'Member deleted successfully' });
+    } catch (err) {
+        console.error(err.errors[0].message);
         res.status(500).json({ error: err.errors[0].message });
     }
 }
