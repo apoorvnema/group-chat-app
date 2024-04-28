@@ -3,7 +3,7 @@ const rootDir = require('../utils/path');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const User = require('../models/user');
+const User = require('../models/users');
 const database = require('../utils/database');
 
 exports.getSignup = (req, res, next) => {
@@ -50,8 +50,6 @@ exports.postLogin = async (req, res, next) => {
             error.statusCode = 401;
             throw error;
         }
-        user.loggedIn = true;
-        await user.save();
         await t.commit();
         res.status(200).json({ message: 'User successfully Logged In', token: generateAccessToken(user.id, user.email) });
     }

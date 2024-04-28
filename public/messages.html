@@ -6,14 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Group Chat App</title>
     <link rel="stylesheet" href="/css/main.css">
-    <link rel="icon" href="group-chat-app.png" type="image/png">
+    <link rel="icon" href="/group-chat-app.png" type="image/png">
 </head>
 
 <body>
     <header>
         <nav>
             <ul>
-                <li><a class="active" href="/">Messages</a></li>
+                <li><a href="/">Groups</a></li>
+                <li><a class="active" href="/global">Global Messages</a></li>
                 <li><a href="/signup">Signup</a></li>
                 <li><a href="/login">Login</a></li>
                 <li><a href="/contactus">Contact</a></li>
@@ -22,8 +23,10 @@
     </header>
     <section>
         <form>
-            <pre id="online-users"></pre>
-            <pre id="all-messages"></pre>
+            <label for="online-users">Online Users:</label>
+            <pre id="online-users" name="online-users"></pre>
+            <label for="messages">Messages:</label>
+            <pre id="all-messages" name="messages"></pre>
             <label for="message">Message:</label>
             <input type="text" name="message" id="message" required>
             <button type="submit">Send</button>

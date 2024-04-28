@@ -15,19 +15,28 @@ app.use(cors({
 const messages = require("./routes/messages");
 const user = require("./routes/user");
 const contact = require("./routes/contact");
+const groups = require("./routes/groups");
 const error = require("./controllers/error");
 const database = require("./utils/database");
-const User = require("./models/user");
-const Messages = require("./models/messages");
+const User = require("./models/users");
+const Message = require("./models/messages");
+const Group = require("./models/groups");
+const GroupMember = require("./models/groupmember");
 
 app.use(messages);
 app.use(user);
 app.use(contact);
+app.use(groups);
 
 app.use(error.error404);
 
-User.hasMany(Messages);
-Messages.belongsTo(User);
+User.hasMany(Message);
+Message.belongsTo(User);
+
+Group.belongsToMany(User, { through: GroupMember });
+User.belongsToMany(Group, { through: GroupMember });
+Group.hasMany(Message);
+Message.belongsTo(Group);
 
 database
     .sync()

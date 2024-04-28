@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Chat App</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="icon" href="/group-chat-app.png" type="image/png">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a class="active" href="/">Groups</a></li>
+                <li><a href="/global">Global Messages</a></li>
+                <li><a href="/signup">Signup</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/contactus">Contact</a></li>
+                <button type="button" id="create-group-btn">Create Group</button>
+            </ul>
+        </nav>
+    </header>
+    <section>
+        <div id="group-div">
+            <h4 id="all-group-heading">Your Groups</h4>
+            <li id="group-list">
+            </li>
+        </div>
+    </section>
+
+    <div id="createGroupDialog" class="dialog">
+        <form id="createGroupForm">
+            <label for="groupName">Group Name:</label>
+            <input type="text" id="groupName" name="groupName" required>
+            <label for="members">Members Emails (comma separated):</label>
+            <input type="text" id="members" name="members" required>
+            <button type="submit">Create Group</button>
+            <button type="button" id="close">Close</button>
+        </form>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"
+    integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/js/groups.js"></script>
+
+</html>

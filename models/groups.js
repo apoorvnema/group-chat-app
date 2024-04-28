@@ -2,15 +2,15 @@ const { DataTypes } = require("sequelize");
 
 const database = require("../utils/database");
 
-const Message = database.define("Message", {
-    message: {
+const Group = database.define("Group", {
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    sender: {
-        type: DataTypes.STRING,
+    adminId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-    },
-});
+    }
+})
 
-module.exports = Message;
+module.exports = Group;

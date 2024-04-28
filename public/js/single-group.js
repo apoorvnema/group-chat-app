@@ -1,16 +1,18 @@
 const form = document.querySelector("form");
 const token = localStorage.getItem("token");
+const groupId = localStorage.getItem("groupId");
+const groupName = localStorage.getItem("groupName");
 
 async function fetchAllMessages() {
-    const onlineUsersList = document.getElementById("online-users");
+    const memberList = document.getElementById("members");
     const messagesList = document.getElementById("all-messages");
     try {
-        const p1 = axios.get("http://127.0.0.1:3000/all", { headers: { "Authorization": token } });
-        const p2 = axios.get("http://127.0.0.1:3000/online-users", { headers: { "Authorization": token } });
-        const [allMessagesResponse, onlineUsersResponse] = await Promise.all([p1, p2]);
+        const p1 = axios.get(`http://127.0.0.1:3000/get-all-messages/${groupId}`, { headers: { "Authorization": token } });
+        const p2 = axios.get(`http://127.0.0.1:3000/get-all-members/${groupId}`, { headers: { "Authorization": token } });
+        const [allMessagesResponse, membersResponse] = await Promise.all([p1, p2]);
         const newMessages = allMessagesResponse.data.message;
-        const onlineUsers = onlineUsersResponse.data.message.map(user => `${user} joined`).join('\n');
-        onlineUsersList.textContent = onlineUsers;
+        const allMembers = membersResponse.data.message.map(member => `${member}`).join('\n');
+        memberList.innerHTML = allMembers;
         const storedMessages = localStorage.getItem("messages");
         const allMessages = [...newMessages];
         const last10Messages = allMessages.slice(-10);
@@ -36,7 +38,7 @@ form.addEventListener("submit", async (e) => {
     try {
         e.preventDefault();
         const message = e.target.message.value;
-        await axios.post("http://127.0.0.1:3000/global", { message }, { headers: { "Authorization": token } });
+        await axios.post(`http://127.0.0.1:3000/send-group-message/${groupId}`, { message }, { headers: { "Authorization": token } });
         document.location.reload();
     }
     catch (err) {
@@ -45,30 +47,22 @@ form.addEventListener("submit", async (e) => {
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
+    const navBar = document.getElementById("nav-bar");
     try {
         if (!token) {
             alert("You are not logged in!");
             document.location.href = "/login";
         }
         else {
-            await axios.post("http://127.0.0.1:3000/set-online", {}, { headers: { "Authorization": token } });
+            const li = document.createElement("li");
+            li.innerHTML = `<a class="active" href="/group/${groupId}">${groupName}</a>`;
+            navBar.appendChild(li);
             fetchAllMessages();
             setInterval(fetchAllMessages, 1000);
         }
     }
     catch (err) {
-        alert(err.response.data.error);
-        window.location.href = "/login";
+        console.error(err);
     }
 });
-
-window.addEventListener('beforeunload', setOfflineUser);
-
-async function setOfflineUser(e) {
-    try {
-        await axios.post("http://127.0.0.1:3000/set-offline", {}, { headers: { "Authorization": token } });
-    } catch (error) {
-        console.error("Error sending offline status:", error);
-    }
-}
 

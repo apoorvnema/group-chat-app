@@ -14,6 +14,8 @@ header {
 
 ul {
     display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 li {
@@ -45,7 +47,8 @@ section {
     font-size: large;
 }
 
-form {
+form,
+#group-div {
     display: flex;
     flex-direction: column;
     background-color: #202123;
@@ -94,7 +97,12 @@ button:hover {
     background-color: #0da380b4;
 }
 
-/* Signup */
+#online-users,
+#members {
+    color: #0da37f;
+}
+
+/* Signup and Login */
 label a {
     text-decoration: none;
     color: #14ba94;
@@ -104,6 +112,40 @@ label a:hover {
     color: #0da37f;
 }
 
-#online-users {
-    color: #0da37f;
+/* Groups */
+#all-group-heading {
+    text-align: center;
+}
+
+#group-list button {
+    width: 100%;
+}
+
+/* Create Group */
+#create-group-btn {
+    font-size: medium;
+    margin-left: auto;
+}
+
+#createGroupDialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #00000077;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    display: none;
+    height: 100vh;
+    align-content: center;
+    text-align: -webkit-center;
+}
+
+#createGroupDialog.active {
+    display: block;
+}
+
+#close {
+    background-color: #d9534f;
 }

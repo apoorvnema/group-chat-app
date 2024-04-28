@@ -12,30 +12,30 @@
 <body>
     <header>
         <nav>
-            <ul>
+            <ul id="nav-bar">
                 <li><a href="/">Groups</a></li>
                 <li><a href="/global">Global Messages</a></li>
                 <li><a href="/signup">Signup</a></li>
-                <li><a class="active" href="/login">Login</a></li>
+                <li><a href="/login">Login</a></li>
                 <li><a href="/contactus">Contact</a></li>
             </ul>
         </nav>
     </header>
-
     <section>
         <form>
-            <label for="email">Email:</label>
-            <input type="email" name="email" id="email" required>
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
-            <button type="submit">Login</button>
-            <label>Don't have an account? <a href="/signup">Signup</a></label>
+            <label for="members">Members:</label>
+            <pre id="members" name="members"></pre>
+            <label for="messages">Messages:</label>
+            <pre id="all-messages" name="messages"></pre>
+            <label for="message">Message:</label>
+            <input type="text" name="message" id="message" required>
+            <button type="submit">Send</button>
         </form>
     </section>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"
     integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="/js/login.js"></script>
+<script src="/js/single-group.js"></script>
 
 </html>
