@@ -139,7 +139,8 @@ label a:hover {
 }
 
 #createGroupDialog,
-#editGroupDialog {
+#editGroupDialog,
+#memberDialog {
     position: fixed;
     top: 0;
     left: 0;
@@ -155,22 +156,27 @@ label a:hover {
 }
 
 #createGroupDialog.active,
-#editGroupDialog.active {
+#editGroupDialog.active,
+#memberDialog.active {
     display: block;
 }
 
-#close {
+#close,
+#cancel {
     background-color: #f0ad4e;
 }
 
-#delete-group {
+#delete-group,
+#delete-member {
     background-color: #d9534f;
 }
 
-#close:hover {
+#close:hover,
+#cancel:hover {
     background-color: #f0ad4e77;
 }
 
-#delete-group:hover {
+#delete-group:hover,
+#delete-member:hover {
     background-color: #d9534f77;
 }

@@ -25,4 +25,6 @@ router.put("/edit-group/:groupId", authenticate, groupController.editGroup);
 
 router.delete("/delete-member/:groupId/:userId", authenticate, groupController.deleteMember);
 
+router.put("/make-admin/:groupId/:userId", authenticate, groupController.makeAdmin);
+
 module.exports = router;
