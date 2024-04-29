@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         else {
             const groupList = document.getElementById("group-list");
-            const allGroups = await axios.get("http://127.0.0.1:3000/get-all-groups", { headers: { "Authorization": token } });
+            const allGroups = await axios.get("https://group-chat-app.apoorvnema.pro/get-all-groups", { headers: { "Authorization": token } });
             allGroups.data.message.forEach(group => {
                 groupList.innerHTML += `<button type="button" id=${group.id} onclick="singleGroup(${group.id}, '${group.name}')">${group.name}</button>`;
             });
@@ -56,7 +56,7 @@ document.getElementById("createGroupForm").addEventListener("submit", async (e) 
             document.location.href = "/login";
         }
         else {
-            await axios.post("http://127.0.0.1:3000/create-group", { name: groupName, members: membersArray }, { headers: { "Authorization": token } });
+            await axios.post("https://group-chat-app.apoorvnema.pro/create-group", { name: groupName, members: membersArray }, { headers: { "Authorization": token } });
             document.location.href = "/";
         }
     }

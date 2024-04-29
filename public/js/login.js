@@ -4,7 +4,7 @@ form.addEventListener("submit", async (e) => {
     try {
         const email = e.target.email.value;
         const password = e.target.password.value;
-        const login = await axios.post("http://127.0.0.1:3000/login", { email: email, password: password });
+        const login = await axios.post("https://group-chat-app.apoorvnema.pro/login", { email: email, password: password });
         alert(login.data.message);
         localStorage.setItem("token", login.data.token);
         window.location.href = "/";

@@ -9,7 +9,7 @@ app.use(express.static("public"));
 app.use(express.json());
 dotenv.config();
 app.use(cors({
-    origin: ["http://127.0.0.1:3000", "http://localhost:3000"]
+    origin: ["https://group-chat-app.apoorvnema.pro/"]
 }));
 
 const messages = require("./routes/messages");
@@ -21,7 +21,7 @@ const database = require("./utils/database");
 const User = require("./models/users");
 const Message = require("./models/messages");
 const Group = require("./models/groups");
-const GroupMember = require("./models/groupmember");
+const GroupMember = require("./models/groupMember");
 
 app.use(messages);
 app.use(user);
