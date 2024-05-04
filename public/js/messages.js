@@ -30,7 +30,7 @@ form.addEventListener("submit", async (e) => {
             messagesList.firstChild.remove();
     }
     catch (err) {
-        console.log(err);
+        console.error(err);
     }
 });
 
@@ -63,7 +63,6 @@ socket.on("message", (message) => {
 function addMessageToList(message) {
     const li = document.createElement("li");
     if(message.message.startsWith("![Image]")){
-        console.log(true)
         li.innerHTML = message.sender + ": " + `<img class="message-image" src="${message.message.substring(9, message.message.length - 1)}" alt="Image">`;
     }else{
         li.innerText = message.sender + ": " + message.message;

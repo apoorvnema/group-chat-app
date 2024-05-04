@@ -5,6 +5,7 @@ const groupId = localStorage.getItem("groupId");
 const groupName = localStorage.getItem("groupName");
 const messagesList = document.getElementById("all-messages");
 const navBar = document.getElementById("nav-bar");
+const imageInput = document.getElementById('image-input');
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -13,16 +14,40 @@ form.addEventListener("submit", async (e) => {
         socket.emit("post-group-message", message);
         e.target.message.value = "";
         const li = document.createElement("li");
-        li.innerText = "You" + ": " + message;
+        if(message.startsWith("![Image]")){
+            li.innerHTML = "You" + ": " + `<img class="message-image" src="${message.substring(9, message.length - 1)}" alt="Image">`;
+        }else{
+            li.innerText = "You" + ": " + message;
+        }
         messagesList.appendChild(li);
         messagesList.scrollTop = messagesList.scrollHeight;
         if (messagesList.children.length > 10)
             messagesList.firstChild.remove();
     }
     catch (err) {
-        console.log(err);
+        console.error(err);
     }
 });
+
+imageInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    uploadImage(file);
+});
+
+async function uploadImage(file) {
+    try {
+        const formData = new FormData();
+        formData.append('image', file);
+        const response = await axios.post('https://group-chat-app.apoorvnema.pro/upload-image', formData, {
+            headers: { "Authorization": token, "Content-Type": "multipart/form-data" }
+        });
+        const imageUrl = response.data.imageUrl;
+        const messageInput = document.getElementById('message');
+        messageInput.value += `![Image](${imageUrl})`;
+    } catch (error) {
+        console.error('Error uploading image:', error);
+    }
+}
 
 socket.on("not-member", () => {
     alert("You are not part of this group!");
@@ -37,7 +62,6 @@ socket.on("auth-error", () => {
 socket.emit("get-group-members", groupId);
 
 socket.on("group-members", (idAndNames, admin, emails) => {
-    console.log(admin)
     const memberList = document.getElementById("members");
     try {
         const allMembers = Object.entries(idAndNames).map(([id, member]) => {
@@ -72,13 +96,17 @@ socket.on("group-members", (idAndNames, admin, emails) => {
         memberList.innerHTML = allMembers;
     }
     catch (err) {
-        console.log(err);
+        console.error(err);
     }
 })
 
 function addMessageToList(message) {
     const li = document.createElement("li");
-    li.innerText = message.sender + ": " + message.message;
+    if(message.message.startsWith("![Image]")){
+        li.innerHTML = message.sender + ": " + `<img class="message-image" src="${message.message.substring(9, message.message.length - 1)}" alt="Image">`;
+    }else{
+        li.innerText = message.sender + ": " + message.message;
+    }
     messagesList.appendChild(li);
     messagesList.scrollTop = messagesList.scrollHeight;
 }

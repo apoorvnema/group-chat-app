@@ -62,7 +62,7 @@ database
             socket.on("message", (message) => {
                 authenticateSocket(socket, (err) => {
                     if (err) {
-                        console.log(err);
+                        console.error(err);
                     } else {
                         messagesSocket.postMessages(socket, message);
                     }
@@ -70,7 +70,7 @@ database
             });
             authenticateSocket(socket, (err) => {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
                 } else {
                     socket.on("create-group", (groupData) => {
                         groupsSocket.createGroup(io, socket, groupData);

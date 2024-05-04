@@ -38,6 +38,6 @@ exports.getAllMessages = async (socket) => {
         socket.broadcast.emit("user-joined", { username: socket.user.name });
         socket.emit("all-messages", messages);
     } catch (err) {
-        console.log(err);
+        console.error(err);
     }
 }
