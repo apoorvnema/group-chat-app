@@ -1,74 +1,68 @@
 const form = document.querySelector("form");
 const token = localStorage.getItem("token");
+const socket = io({ auth: { token: token } });
+const messagesList = document.getElementById("all-messages");
+const onlineUsers = document.getElementById("online-users");
 
-async function fetchAllMessages() {
-    const onlineUsersList = document.getElementById("online-users");
-    const messagesList = document.getElementById("all-messages");
-    try {
-        const p1 = axios.get("https://group-chat-app.apoorvnema.pro/all", { headers: { "Authorization": token } });
-        const p2 = axios.get("https://group-chat-app.apoorvnema.pro/online-users", { headers: { "Authorization": token } });
-        const [allMessagesResponse, onlineUsersResponse] = await Promise.all([p1, p2]);
-        const newMessages = allMessagesResponse.data.message;
-        const onlineUsers = onlineUsersResponse.data.message.map(user => `${user} joined`).join('\n');
-        onlineUsersList.textContent = onlineUsers;
-        const storedMessages = localStorage.getItem("messages");
-        const allMessages = [...newMessages];
-        const last10Messages = allMessages.slice(-10);
-        let messageContent = '';
-        if (storedMessages) {
-            JSON.parse(storedMessages).forEach((message) => {
-                messageContent += `${message.sender}: ${message.message}\n`;
-            });
-        }
-        else {
-            last10Messages.forEach((message) => {
-                messageContent += `${message.sender}: ${message.message}\n`;
-            });
-        }
-        messagesList.textContent = messageContent;
-        localStorage.setItem("messages", JSON.stringify(last10Messages));
-    } catch (error) {
-        console.error("Error fetching messages:", error);
-    }
-}
+socket.emit("get-messages");
+
+socket.on("auth-error", () => {
+    alert("Authentication error: You are not logged in!");
+    window.location.href = "/login";
+});
 
 form.addEventListener("submit", async (e) => {
+    e.preventDefault();
     try {
-        e.preventDefault();
         const message = e.target.message.value;
-        await axios.post("https://group-chat-app.apoorvnema.pro/global", { message }, { headers: { "Authorization": token } });
-        document.location.reload();
+        socket.emit("message", message);
+        e.target.message.value = "";
+        const li = document.createElement("li");
+        li.innerText = "You" + ": " + message;
+        messagesList.appendChild(li);
+        messagesList.scrollTop = messagesList.scrollHeight;
+        if (messagesList.children.length > 10)
+            messagesList.firstChild.remove();
     }
     catch (err) {
-        console.error(err);
+        console.log(err);
     }
 });
 
-document.addEventListener("DOMContentLoaded", async () => {
-    try {
-        if (!token) {
-            alert("You are not logged in!");
-            document.location.href = "/login";
-        }
-        else {
-            await axios.post("https://group-chat-app.apoorvnema.pro/set-online", {}, { headers: { "Authorization": token } });
-            fetchAllMessages();
-            setInterval(fetchAllMessages, 1000);
-        }
-    }
-    catch (err) {
-        alert(err.response.data.error);
-        window.location.href = "/login";
-    }
+socket.on("message", (message) => {
+    addMessageToList(message);
+    if (messagesList.children.length > 10)
+        messagesList.firstChild.remove();
 });
 
-window.addEventListener('beforeunload', setOfflineUser);
-
-async function setOfflineUser(e) {
-    try {
-        await axios.post("https://group-chat-app.apoorvnema.pro/set-offline", {}, { headers: { "Authorization": token } });
-    } catch (error) {
-        console.error("Error sending offline status:", error);
-    }
+function addMessageToList(message) {
+    const li = document.createElement("li");
+    li.innerText = message.sender + ": " + message.message;
+    messagesList.appendChild(li);
+    messagesList.scrollTop = messagesList.scrollHeight;
 }
 
+socket.on("all-messages", (allMessages) => {
+    messagesList.innerHTML = "";
+    allMessages.forEach((message) => {
+        addMessageToList(message);
+    });
+});
+
+socket.on("user-joined", (data) => {
+    const li = document.createElement("li");
+    li.innerText = `${data.username} has joined the chat`;
+    onlineUsers.appendChild(li);
+    onlineUsers.scrollTop = onlineUsers.scrollHeight;
+});
+
+socket.on("user-left", (data) => {
+    const li = document.createElement("li");
+    li.innerText = `${data.username} has left the chat`;
+    onlineUsers.appendChild(li);
+    onlineUsers.scrollTop = onlineUsers.scrollHeight;
+});
+
+window.addEventListener("beforeunload", () => {
+    socket.emit("user-left");
+});

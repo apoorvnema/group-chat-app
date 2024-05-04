@@ -1,14 +1,8 @@
-const path = require('path');
-const rootDir = require('../utils/path');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const User = require('../models/users');
-const database = require('../utils/database');
-
-exports.getSignup = (req, res, next) => {
-    res.sendFile(path.join(rootDir, 'public', 'signup.html'));
-};
+const database = require("../utils/database");
+const User = require("../models/users");
 
 exports.postSignup = async (req, res, next) => {
     const t = await database.transaction();
@@ -24,10 +18,6 @@ exports.postSignup = async (req, res, next) => {
         await t.rollback();
         res.status(500).json({ error: err.errors[0].message });
     }
-};
-
-exports.getLogin = (req, res, next) => {
-    res.sendFile(path.join(rootDir, 'public', 'login.html'));
 };
 
 function generateAccessToken(id, email) {
@@ -64,50 +54,3 @@ exports.postLogin = async (req, res, next) => {
         }
     }
 };
-
-exports.getOnlineUsers = async (req, res, next) => {
-    try {
-        const users = await User.findAll({ where: { loggedIn: true } });
-        const names = users.map(user => {
-            if (req.user.name == user.name) {
-                return `You`;
-            }
-            else {
-                return user.name;
-            }
-        });
-        res.status(200).json({ message: names });
-    }
-    catch (err) {
-        console.error(err.errors[0].message);
-        res.status(500).json({ error: err.errors[0].message });
-    }
-}
-
-exports.setOfflineUser = async (req, res, next) => {
-    const t = await database.transaction();
-    try {
-        req.user.loggedIn = false;
-        await req.user.save();
-        await t.commit();
-        res.status(200).json({ message: "User is offline" });
-    } catch (err) {
-        await t.rollback();
-        console.error(err.errors[0].message);
-        res.status(500).json({ error: err.errors[0].message });
-    }
-}
-
-exports.setOnlineUser = async (req, res, next) => {
-    const t = await database.transaction();
-    try {
-        req.user.loggedIn = true;
-        await req.user.save();
-        await t.commit();
-        res.status(200).json({ message: "User is online" });
-    } catch (err) {
-        await t.rollback();
-        console.error(err.errors[0].message);
-        res.status(500).json({ error: err.errors[0].message });
-    }
-}
