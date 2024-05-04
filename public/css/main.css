@@ -98,6 +98,10 @@ button {
     text-decoration: none;
 }
 
+#image-input{
+    margin: 10px;
+}
+
 button:hover {
     background-color: #0da380b4;
 }
@@ -192,4 +196,9 @@ label a:hover {
 #delete-group:hover,
 #delete-member:hover {
     background-color: #d9534f77;
+}
+
+/* Image Upload */
+.message-image{
+    width: 20%;
 }

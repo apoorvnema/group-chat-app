@@ -20,6 +20,7 @@ const views = require("./routes/views");
 const user = require("./routes/user");
 const contact = require("./routes/contact");
 const groups = require("./routes/groups");
+const upload = require("./routes/upload");
 const error = require("./controllers/error");
 const database = require("./utils/database");
 const User = require("./models/users");
@@ -31,6 +32,7 @@ const messagesSocket = require("./sockets/messages");
 const groupsSocket = require("./sockets/groups");
 
 app.use(views);
+app.use(upload);
 app.use(user);
 app.use(contact);
 app.use(groups);
