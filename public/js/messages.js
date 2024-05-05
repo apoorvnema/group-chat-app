@@ -43,7 +43,7 @@ async function uploadImage(file) {
     try {
         const formData = new FormData();
         formData.append('image', file);
-        const response = await axios.post('http://localhost:3000/upload-image', formData, {
+        const response = await axios.post('http://192.168.29.184:3000/upload-image', formData, {
             headers: { "Authorization": token, "Content-Type": "multipart/form-data" }
         });
         const imageUrl = response.data.imageUrl;

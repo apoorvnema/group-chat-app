@@ -7,7 +7,7 @@ form.addEventListener("submit", async (e) => {
         const phone = e.target.phone.value;
         const password = e.target.password.value;
         const userObj = { name: name, email: email, phone: phone, password: password };
-        const signup = await axios.post("http://localhost:3000/signup", userObj);
+        const signup = await axios.post("http://192.168.29.184:3000/signup", userObj);
         alert(signup.data.message);
         window.location.href = "login.html";
     }
