@@ -14,7 +14,7 @@ app.use(express.static("public"));
 app.use(express.json());
 dotenv.config();
 app.use(cors({
-    origin: ["*"]
+    origin: ["https://rpi4.apoorvnema.pro"]
 }));
 
 const views = require("./routes/views");
