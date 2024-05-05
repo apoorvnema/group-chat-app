@@ -14,7 +14,7 @@ app.use(express.static("public"));
 app.use(express.json());
 dotenv.config();
 app.use(cors({
-    origin: ["http://localhost:3000/"]
+    origin: ["*"]
 }));
 
 const views = require("./routes/views");
