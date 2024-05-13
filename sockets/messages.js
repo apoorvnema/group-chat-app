@@ -1,3 +1,5 @@
+const Sentry = require("@sentry/node");
+
 const Message = require("../models/messages")
 const database = require("../utils/database")
 
@@ -7,9 +9,14 @@ exports.postMessages = async (socket, message) => {
     try {
         await Message.create({ message: message, sender: name, UserId: id });
         await t.commit();
+        Sentry.withScope(scope => {
+            scope.setExtra("event_data", message);
+            Sentry.captureMessage("Socket message received");
+        });
         socket.broadcast.emit("message", { message: message, sender: name, userId: id });
-    } catch (error) {
-        console.error(error.message);
+    } catch (err) {
+        Sentry.captureException(err);
+        console.error(err.message);
         await t.rollback();
     }
 };
@@ -38,6 +45,7 @@ exports.getAllMessages = async (socket) => {
         socket.broadcast.emit("user-joined", { username: socket.user.name });
         socket.emit("all-messages", messages);
     } catch (err) {
+        Sentry.captureException(err);
         console.error(err);
     }
 }

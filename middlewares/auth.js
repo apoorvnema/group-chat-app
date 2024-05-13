@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const Sentry = require("@sentry/node");
+
 const User = require('../models/users');
 
 const authenticate = async (req, res, next) => {
@@ -12,6 +14,7 @@ const authenticate = async (req, res, next) => {
         req.user = user;
         next();
     } catch (err) {
+        Sentry.captureException(err);
         res.status(401).send('Unauthorized: No token provided');
         console.error(err);
     }

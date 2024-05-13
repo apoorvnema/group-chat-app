@@ -5,16 +5,30 @@ const cors = require("cors");
 const socket = require("socket.io");
 const http = require("http");
 const cron = require('cron');
+const Sentry = require("@sentry/node");
+const { nodeProfilingIntegration } = require("@sentry/profiling-node");
 
 const app = express();
 const server = http.createServer(app);
 const io = socket(server);
+dotenv.config();
+Sentry.init({
+    dsn: process.env.DSN,
+    integrations: [
+        new Sentry.Integrations.Http({ tracing: true }),
+        new Sentry.Integrations.Express({ app }),
+        nodeProfilingIntegration(),
+    ],
+    tracesSampleRate: 1.0,
+    profilesSampleRate: 1.0,
+});
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(express.json());
-dotenv.config();
 app.use(cors({
-    origin: ["https://group-chat-app.apoorvnema.pro"]
+    origin: ["*"]
 }));
 
 const views = require("./routes/views");
@@ -62,6 +76,7 @@ database
             socket.on("message", (message) => {
                 authenticateSocket(socket, (err) => {
                     if (err) {
+                        Sentry.captureException(err);
                         console.error(err);
                     } else {
                         messagesSocket.postMessages(socket, message);
@@ -70,6 +85,7 @@ database
             });
             authenticateSocket(socket, (err) => {
                 if (err) {
+                    Sentry.captureException(err);
                     console.error(err);
                 } else {
                     socket.on("create-group", (groupData) => {
@@ -98,4 +114,9 @@ database
             });
         })
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+        Sentry.captureException(err);
+        console.error(err)
+    });
+
+app.use(Sentry.Handlers.errorHandler());

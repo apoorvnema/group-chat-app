@@ -1,3 +1,5 @@
+const Sentry = require("@sentry/node");
+
 const User = require("../models/users");
 const GroupMember = require("../models/groupMember");
 const Message = require("../models/messages");
@@ -21,6 +23,7 @@ exports.createGroup = async (io, socket, groupData) => {
         await t.commit();
         io.emit("group-created", group);
     } catch (err) {
+        Sentry.captureException(err);
         if (err.message == "User not found") {
             socket.emit("user-not-found");
         }
@@ -36,6 +39,7 @@ exports.getAllGroups = async (socket, cb) => {
         return cb(groups);
     }
     catch (err) {
+        Sentry.captureException(err);
         console.error(err);
     }
 }
@@ -59,6 +63,7 @@ exports.getGroupMessages = async (socket, groupId) => {
         socket.emit("get-group-messages", messages);
     }
     catch (err) {
+        Sentry.captureException(err);
         console.error(err);
     }
 }
@@ -90,6 +95,7 @@ exports.getGroupMembers = async (socket, groupId) => {
         socket.emit("group-members", idAndNames, admin, emails);
     }
     catch (err) {
+        Sentry.captureException(err);
         console.error(err);
     }
 }
@@ -101,8 +107,9 @@ exports.postMessages = async (socket, message, groupId) => {
         await Message.create({ message: message, sender: name, UserId: id, GroupId: groupId });
         await t.commit();
         socket.to(groupId).emit("post-group-message", { message: message, sender: name, userId: id });
-    } catch (error) {
-        console.error(error.message);
+    } catch (err) {
+        Sentry.captureException(err);
+        console.error(err.message);
         await t.rollback();
     }
 };

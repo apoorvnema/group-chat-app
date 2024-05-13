@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const Sentry = require("@sentry/node");
 
 function uploadToS3(data, fileName) {
     const s3 = new AWS.S3({
@@ -27,8 +28,9 @@ exports.uploadImage = async (req, res) => {
         const file = req.file;
         const data = await uploadToS3(file.buffer, file.originalname);
         res.status(200).json({ imageUrl: data });
-    } catch (error) {
-        console.error('Error uploading image to S3:', error);
+    } catch (err) {
+        Sentry.captureException(err);
+        console.error('Error uploading image to S3:', err);
         res.status(500).json({ error: 'Failed to upload image' });
     }
 }

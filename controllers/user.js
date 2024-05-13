@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Sentry = require("@sentry/node");
 
 const database = require("../utils/database");
 const User = require("../models/users");
@@ -14,6 +15,7 @@ exports.postSignup = async (req, res, next) => {
         res.status(200).json({ message: 'User created successfully' });
     }
     catch (err) {
+        Sentry.captureException(err);
         console.error(err.errors[0].message);
         await t.rollback();
         res.status(500).json({ error: err.errors[0].message });
@@ -44,6 +46,7 @@ exports.postLogin = async (req, res, next) => {
         res.status(200).json({ message: 'User successfully Logged In', token: generateAccessToken(user.id, user.email) });
     }
     catch (err) {
+        Sentry.captureException(err);
         await t.rollback();
         if (err.statusCode != 500) {
             res.status(err.statusCode).json({ error: err.message });

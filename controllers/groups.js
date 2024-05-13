@@ -1,3 +1,5 @@
+const Sentry = require("@sentry/node");
+
 const GroupMember = require("../models/groupMember");
 const User = require("../models/users");
 const Group = require("../models/groups");
@@ -19,6 +21,7 @@ exports.deleteGroup = async (req, res, next) => {
         await t.commit();
         res.status(200).json({ message: 'Group deleted successfully' });
     } catch (err) {
+        Sentry.captureException(err);
         await t.rollback();
         console.error(err.errors[0].message);
         res.status(500).json({ error: err.errors[0].message });
@@ -51,6 +54,7 @@ exports.editGroup = async (req, res, next) => {
         await t.commit();
         res.status(200).json({ message: 'Group edited successfully' });
     } catch (err) {
+        Sentry.captureException(err);
         await t.rollback();
         console.error(err.errors[0].message);
         res.status(500).json({ error: err.errors[0].message });
@@ -72,6 +76,7 @@ exports.deleteMember = async (req, res, next) => {
         await GroupMember.destroy({ where: { groupId: groupId, userId: userId } });
         res.status(200).json({ message: 'Member deleted successfully' });
     } catch (err) {
+        Sentry.captureException(err);
         console.error(err.errors[0].message);
         res.status(500).json({ error: err.errors[0].message });
     }
@@ -92,6 +97,7 @@ exports.makeAdmin = async (req, res, next) => {
         await GroupMember.update({ admin: true }, { where: { groupId: groupId, userId: userId } });
         res.status(200).json({ message: 'Member made admin successfully' });
     } catch (err) {
+        Sentry.captureException(err);
         console.error(err.errors[0].message);
         res.status(500).json({ error: err.errors[0].message });
     }
