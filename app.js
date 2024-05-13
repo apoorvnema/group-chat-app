@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(express.json());
 app.use(cors({
-    origin: ["*"]
+    origin: ["https://group-chat-app.apoorvnema.pro"]
 }));
 
 const views = require("./routes/views");
